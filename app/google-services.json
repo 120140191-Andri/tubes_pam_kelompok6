@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "739989409896",
+    "project_id": "uas-pam-c7050",
+    "storage_bucket": "uas-pam-c7050.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739989409896:android:0fc990f5267cbe92b9abdd",
+        "android_client_info": {
+          "package_name": "com.example.uas_pam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlvrieuZNRARK8A_79zGY8XfousRKOw78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
