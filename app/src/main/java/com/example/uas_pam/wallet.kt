@@ -1,9 +1,14 @@
 package com.example.uas_pam
 
+import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +19,18 @@ import com.example.uas_pam.databinding.ActivityWalletBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+
+import android.widget.TextView
+import androidx.core.app.ActivityCompat.recreate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
+data class FirestoreDocument(
+    val id: String,
+    val data: Map<String, Any>
+)
 
 class wallet : AppCompatActivity() {
 
@@ -42,7 +59,6 @@ class wallet : AppCompatActivity() {
                         // Dokumen ditemukan, Anda dapat mengakses data di sini
                         val data = document.data
                         // Lakukan apa pun yang perlu Anda lakukan dengan data di sini
-                        println("Data: $data")
 
                         binding.nama.text = "Selamat Datang ${document.getString("nama")}"
 
@@ -60,6 +76,8 @@ class wallet : AppCompatActivity() {
         }else{
             pindahKeLogin()
         }
+
+        ambilDataWallet()
 
         binding.logoutBtn.setOnClickListener {
             logout()
@@ -107,6 +125,7 @@ class wallet : AppCompatActivity() {
             firestore.collection("wallet-${it.uid}")
                 .add(alamatData)
                 .addOnSuccessListener {
+                    ambilDataWallet()
                     Toast.makeText(
                         this,
                         "Berhasil Tambah Alamat Wallet",
@@ -130,5 +149,102 @@ class wallet : AppCompatActivity() {
                     binding.btnTutup.visibility = View.GONE
                 }
         }
+    }
+
+    fun ambilDataWallet(){
+
+
+        val db = FirebaseFirestore.getInstance()
+        val user = auth.currentUser
+
+        user?.let {
+            db.collection("wallet-${it.uid}")
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents != null) {
+
+                        val dataList: MutableList<FirestoreDocument> = mutableListOf()
+                        for (document in documents) {
+                            Log.d(TAG, "${document.id} => ${document.getString("alamat")}")
+                            val id = document.id
+                            val data = document.data
+                            dataList.add(FirestoreDocument(id, data))
+                        }
+                        Log.d(TAG, "Data List: ${dataList}")
+
+                        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+                        recyclerView.layoutManager = LinearLayoutManager(this)
+                        val adapter = RecyclerViewAdapter(dataList, this)
+                        recyclerView.adapter = adapter
+
+                    } else {
+                        // Dokumen tidak ditemukan
+                        println("Document not found")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    // Kegagalan saat mengambil data
+                    println("Error getting documents: $exception")
+                    pindahKeLogin()
+                }
+        }
+
+    }
+
+    fun hapusDataWallet(id: String){
+        val db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+
+        user?.let {
+            val docRef = db.collection("wallet-${it.uid}").document(id)
+            docRef.delete()
+                .addOnSuccessListener {
+                    Log.d(TAG, "Dokumen berhasil dihapus.")
+                    Toast.makeText(
+                        baseContext, "Data Wallet Berhasil Dihapus",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    ambilDataWallet()
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error deleting document", e)
+                    Toast.makeText(
+                        baseContext, "Tambah Alamat Wallet Gagal . ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+    }
+
+}
+
+class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val textViewAlamat: TextView = itemView.findViewById(R.id.textViewAlamat)
+    val imageViewDelete: ImageView = itemView.findViewById(R.id.imageViewDelete)
+}
+
+class RecyclerViewAdapter(private val dataList: List<FirestoreDocument>, private val wallet: wallet) : RecyclerView.Adapter<ViewHolder>() {
+    private lateinit var auth: FirebaseAuth
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val document = dataList[position]
+        holder.textViewAlamat.text = document.data["alamat"].toString()
+
+        holder.itemView.setOnClickListener {
+            println("ini id: ${document.id}")
+        }
+
+        holder.imageViewDelete.setOnClickListener {
+              wallet.hapusDataWallet(document.id)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return dataList.size
     }
 }
