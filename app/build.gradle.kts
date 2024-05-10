@@ -9,6 +9,10 @@ android {
     namespace = "com.example.uas_pam"
     compileSdk = 34
 
+    viewBinding {
+        enable = true
+    }
+
     defaultConfig {
         applicationId = "com.example.uas_pam"
         minSdk = 26
