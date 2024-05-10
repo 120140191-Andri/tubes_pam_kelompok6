@@ -36,6 +36,8 @@ class wallet : AppCompatActivity() {
 
     private lateinit var binding: ActivityWalletBinding
     private lateinit var auth: FirebaseAuth
+    var id_edit = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -88,10 +90,14 @@ class wallet : AppCompatActivity() {
             binding.btnTambah2.visibility = View.VISIBLE
             binding.btnTambah1.visibility = View.GONE
             binding.btnTutup.visibility = View.VISIBLE
+            binding.masukanAlamatEdit.visibility = View.GONE
+            binding.btnUbah.visibility = View.GONE
         }
 
         binding.btnTutup.setOnClickListener {
             binding.masukanAlamat.visibility = View.GONE
+            binding.masukanAlamatEdit.visibility = View.GONE
+            binding.btnUbah.visibility = View.GONE
             binding.btnTambah2.visibility = View.GONE
             binding.btnTambah1.visibility = View.VISIBLE
             binding.btnTutup.visibility = View.GONE
@@ -102,6 +108,62 @@ class wallet : AppCompatActivity() {
             tambahDataAlamat(alamat)
         }
 
+        binding.btnUbah.setOnClickListener {
+            val alamatUbah = binding.masukanAlamatEdit.text.toString()
+            ubahDataAlamat(id_edit, alamatUbah)
+        }
+
+    }
+
+    fun ubahDataAlamat(id: String, alamat: String){
+        val firestore = FirebaseFirestore.getInstance()
+
+        val user = auth.currentUser
+        val alamatData = hashMapOf(
+            "alamat" to alamat,
+        )
+        user?.let {
+            firestore.collection("wallet-${it.uid}").document(id)
+                .set(alamatData)
+                .addOnSuccessListener {
+                    ambilDataWallet()
+                    Toast.makeText(
+                        this,
+                        "Berhasil Ubah Alamat Wallet",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding.masukanAlamat.visibility = View.GONE
+                    binding.btnTambah2.visibility = View.GONE
+                    binding.btnTambah1.visibility = View.VISIBLE
+                    binding.masukanAlamatEdit.visibility = View.GONE
+                    binding.btnUbah.visibility = View.GONE
+                    binding.btnTutup.visibility = View.GONE
+                }
+                .addOnFailureListener { e ->
+                    recreate()
+                    Log.i("Gagal", "${e.message}")
+                    Toast.makeText(
+                        baseContext, "Ubah Alamat Wallet Gagal . ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding.masukanAlamat.visibility = View.GONE
+                    binding.btnTambah2.visibility = View.GONE
+                    binding.btnTambah1.visibility = View.VISIBLE
+                    binding.btnTutup.visibility = View.GONE
+                    binding.masukanAlamatEdit.visibility = View.GONE
+                    binding.btnUbah.visibility = View.GONE
+                    binding.btnTutup.visibility = View.GONE
+                }
+        }
+    }
+
+    fun bukaEdit(id: String, alamat: String){
+        binding.masukanAlamatEdit.visibility = View.VISIBLE
+        binding.btnUbah.visibility = View.VISIBLE
+        binding.btnTutup.visibility = View.VISIBLE
+
+        id_edit = id
+        binding.masukanAlamatEdit.setText(alamat)
     }
 
     private fun pindahKeLogin(){
@@ -152,7 +214,6 @@ class wallet : AppCompatActivity() {
     }
 
     fun ambilDataWallet(){
-
 
         val db = FirebaseFirestore.getInstance()
         val user = auth.currentUser
@@ -222,6 +283,7 @@ class wallet : AppCompatActivity() {
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val textViewAlamat: TextView = itemView.findViewById(R.id.textViewAlamat)
     val imageViewDelete: ImageView = itemView.findViewById(R.id.imageViewDelete)
+    val imageViewEdit: ImageView = itemView.findViewById(R.id.imageViewEdit)
 }
 
 class RecyclerViewAdapter(private val dataList: List<FirestoreDocument>, private val wallet: wallet) : RecyclerView.Adapter<ViewHolder>() {
@@ -237,6 +299,10 @@ class RecyclerViewAdapter(private val dataList: List<FirestoreDocument>, private
 
         holder.itemView.setOnClickListener {
             println("ini id: ${document.id}")
+        }
+
+        holder.imageViewEdit.setOnClickListener {
+            wallet.bukaEdit(document.id, document.data["alamat"].toString())
         }
 
         holder.imageViewDelete.setOnClickListener {

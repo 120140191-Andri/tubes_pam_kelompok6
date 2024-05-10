@@ -54,6 +54,22 @@
             android:inputType="text"
             android:visibility="gone" />
 
+        <EditText
+            android:id="@+id/masukanAlamatEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Masukan Alamat"
+            android:inputType="text"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnUbah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ubah"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btnTambah2"
             android:layout_width="match_parent"
