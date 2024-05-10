@@ -166,6 +166,12 @@ class wallet : AppCompatActivity() {
         binding.masukanAlamatEdit.setText(alamat)
     }
 
+    fun pindehKeAsset(alamat: String){
+        val intent = Intent(this, Assets::class.java)
+        intent.putExtra("alamat", alamat)
+        startActivity(intent)
+    }
+
     private fun pindahKeLogin(){
         val intentLogin = Intent(this, Login::class.java)
         startActivity(intentLogin)
@@ -299,6 +305,7 @@ class RecyclerViewAdapter(private val dataList: List<FirestoreDocument>, private
 
         holder.itemView.setOnClickListener {
             println("ini id: ${document.id}")
+            wallet.pindehKeAsset(document.data["alamat"].toString())
         }
 
         holder.imageViewEdit.setOnClickListener {
