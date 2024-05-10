@@ -1,6 +1,5 @@
 package com.example.uas_pam
 
-import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -12,20 +11,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.uas_pam.databinding.ActivityAssetsBinding
 import com.example.uas_pam.databinding.ActivityWalletBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 import android.widget.TextView
-import androidx.core.app.ActivityCompat.recreate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 data class FirestoreDocument(
     val id: String,
@@ -239,7 +231,7 @@ class wallet : AppCompatActivity() {
                         }
                         Log.d(TAG, "Data List: ${dataList}")
 
-                        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+                        val recyclerView: RecyclerView = findViewById(R.id.recyclerViewAsset)
                         recyclerView.layoutManager = LinearLayoutManager(this)
                         val adapter = RecyclerViewAdapter(dataList, this)
                         recyclerView.adapter = adapter
