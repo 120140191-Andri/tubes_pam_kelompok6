@@ -13,6 +13,12 @@
         android:theme="@style/Theme.UASPAM"
         tools:targetApi="31">
         <activity
+            android:name=".Assets"
+            android:exported="false" />
+        <activity
+            android:name=".wallet"
+            android:exported="false" />
+        <activity
             android:name=".Registrasi"
             android:exported="false" />
         <activity
