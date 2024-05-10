@@ -21,6 +21,36 @@
             android:text="Selamat Datang"
             android:textSize="24sp" />
 
+        <EditText
+            android:id="@+id/masukanAlamat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Masukan Alamat"
+            android:inputType="text"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnTambah2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Simpan"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnTambah1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tambah Alamat" />
+
+        <Button
+            android:id="@+id/btnTutup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#CF2F2F"
+            android:text="Tutup"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/logoutBtn"
             android:layout_width="match_parent"
