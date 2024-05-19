@@ -29,10 +29,18 @@
             android:text="Selamat Datang"
             android:textSize="24sp" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="?android:attr/listDivider" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAsset"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 

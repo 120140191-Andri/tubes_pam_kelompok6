@@ -21,6 +21,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Timer
+import java.util.TimerTask
 
 interface ApiService {
     @GET("asset/{alamat}")
@@ -75,7 +77,15 @@ class Assets : AppCompatActivity() {
             pindahKeLogin()
         }
 
-        ambilData(this)
+        val timer = Timer()
+        val task = object : TimerTask() {
+            override fun run() {
+                ambilData(this@Assets)
+            }
+        }
+
+        timer.schedule(task, 0, 3000)
+
     }
 
     fun ambilData(context: Context){
@@ -90,12 +100,13 @@ class Assets : AppCompatActivity() {
                         println("dt berhasil ${dats.harga_ada}")
 
                         val itemList = mutableListOf<Item>()
+                        itemList.clear()
                         for (item in dats.data) {
                             itemList.add(Item(item.nama, item.jumlah))
                         }
                         val recyclerView: RecyclerView = findViewById(R.id.recyclerViewAsset)
                         recyclerView.layoutManager = LinearLayoutManager(context)
-                        val adapter = RecyclerViewAdapterAsset(itemList)
+                        val adapter = RecyclerViewAdapterAsset(itemList, dats.harga_ada)
                         recyclerView.adapter = adapter
 
                     }else{
@@ -158,8 +169,10 @@ class ViewHolderAsset(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val textViewJumlah: TextView = itemView.findViewById(R.id.textViewJumlah)
 }
 
-class RecyclerViewAdapterAsset(private val dataList: List<Item>) : RecyclerView.Adapter<ViewHolderAsset>() {
+class RecyclerViewAdapterAsset(private val dataList: List<Item>, hargaAda: String) : RecyclerView.Adapter<ViewHolderAsset>() {
     private lateinit var auth: FirebaseAuth
+    var hargaAda = hargaAda;
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderAsset {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout_asset, parent, false)
         return ViewHolderAsset(view)
@@ -167,8 +180,16 @@ class RecyclerViewAdapterAsset(private val dataList: List<Item>) : RecyclerView.
 
     override fun onBindViewHolder(holder: ViewHolderAsset, position: Int) {
         val document = dataList[position]
-        holder.textViewNama.text = document.nama.toString()
-        holder.textViewJumlah.text = document.jumlah.toString()
+        val namaAsset = document.nama.toString()
+        val jumlahAsset = document.jumlah.toString()
+
+        holder.textViewNama.text = "Nama Asset: " + namaAsset
+        if(namaAsset == "₳"){
+            holder.textViewJumlah.text = "Jumlah: " + jumlahAsset + namaAsset + " ($ ${hargaAda.toDouble() * jumlahAsset.toDouble()})"
+        }else{
+            holder.textViewJumlah.text = "Jumlah: " + jumlahAsset + namaAsset
+        }
+
     }
 
     override fun getItemCount(): Int {
