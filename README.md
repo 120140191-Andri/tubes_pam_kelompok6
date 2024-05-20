@@ -12,3 +12,20 @@ Aplikasi "Cek Asset Dapps Blockchain Cardano" adalah aplikasi mobile inovatif ya
 
 Aplikasi ini dibangun dengan menggunakan Node JS Express untuk backend API, dan kotlin untuk mobile app nya
 
+## Application Development Stage
+
+Tahap implementasi melibatkan perubahan desain aplikasi menjadi bentuk kode yang dimulai dari tahap desain sistem dan melakukan pengujian serta penerapan. Pada pengembangan aplikasi ini kami menggunakan metode model waterfall, dengan tahap sebagai berikut : 
+Analisa kebutuhan
+Tahap ini melibatkan identifikasi kebutuhan fungsional dan non-fungsional dari aplikasi, serta memahami kebutuhan pengguna.
+
+1. Analisa API
+   Menganalisis dan memilih API yang diperlukan untuk berinteraksi dengan blockchain Cardano dan memperoleh data aset DApps.
+
+2. Analisa Database
+   Menentukan struktur database yang diperlukan untuk menyimpan informasi aset DApps dan data terkait.
+
+3. Implementasi API
+   Mengintegrasikan API yang telah dipilih ke dalam aplikasi untuk mengambil data dari blockchain Cardano.
+
+4. Implementasi Pemrograman
+   Tahap ini melibatkan penulisan kode untuk membangun aplikasi, termasuk logika bisnis, tampilan pengguna, dan integrasi dengan API dan database.
