@@ -1,6 +1,7 @@
 package com.example.uas_pam
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 data class FirestoreDocument(
     val id: String,
@@ -97,7 +101,7 @@ class wallet : AppCompatActivity() {
 
         binding.btnTambah2.setOnClickListener {
             val alamat = binding.masukanAlamat.text.toString()
-            tambahDataAlamat(alamat)
+            validasiTambahAlamat(this, alamat)
         }
 
         binding.btnUbah.setOnClickListener {
@@ -105,6 +109,44 @@ class wallet : AppCompatActivity() {
             ubahDataAlamat(id_edit, alamatUbah)
         }
 
+    }
+
+    private fun validasiTambahAlamat(context: Context, alamat: String){
+        val call = ApiClient.apiService.getAssetByAlamat(alamat)
+
+        call.enqueue(object : Callback<ResponseData> {
+            override fun onResponse(call: Call<ResponseData>, response: Response<ResponseData>) {
+                if (response.isSuccessful) {
+                    val dats = response.body()
+                    if (dats != null && dats.status == "ok") {
+                        tambahDataAlamat(alamat)
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "Gagal Menambahkan Alamat, Alamat Wallet Tidak Tersedia Di Blockchain",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Gagal Menambahkan Alamat, Alamat Wallet Tidak Tersedia Di Blockchain",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseData>, t: Throwable) {
+                // Handle failure
+                println("dt gagals")
+                Toast.makeText(
+                    context,
+                    "Gagal Menambahkan Alamat",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     fun ubahDataAlamat(id: String, alamat: String){
