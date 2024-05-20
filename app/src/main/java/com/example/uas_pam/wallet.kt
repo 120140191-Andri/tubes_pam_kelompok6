@@ -106,9 +106,47 @@ class wallet : AppCompatActivity() {
 
         binding.btnUbah.setOnClickListener {
             val alamatUbah = binding.masukanAlamatEdit.text.toString()
-            ubahDataAlamat(id_edit, alamatUbah)
+            validasiUbahAlamat(this, alamatUbah)
         }
 
+    }
+
+    private fun validasiUbahAlamat(context: Context, alamat: String){
+        val call = ApiClient.apiService.getAssetByAlamat(alamat)
+
+        call.enqueue(object : Callback<ResponseData> {
+            override fun onResponse(call: Call<ResponseData>, response: Response<ResponseData>) {
+                if (response.isSuccessful) {
+                    val dats = response.body()
+                    if (dats != null && dats.status == "ok") {
+                        ubahDataAlamat(id_edit, alamat)
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "Gagal Mengubah Alamat, Alamat Wallet Tidak Tersedia Di Blockchain",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Gagal Mengubah Alamat, Alamat Wallet Tidak Tersedia Di Blockchain",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseData>, t: Throwable) {
+                // Handle failure
+                println("dt gagals")
+                Toast.makeText(
+                    context,
+                    "Gagal Menambahkan Alamat",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     private fun validasiTambahAlamat(context: Context, alamat: String){
