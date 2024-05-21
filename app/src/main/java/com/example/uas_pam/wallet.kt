@@ -109,6 +109,18 @@ class wallet : AppCompatActivity() {
             validasiUbahAlamat(this, alamatUbah)
         }
 
+        val bottomNavigationView = binding.bottomNavigationView
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_profile -> {
+                    val intentProfil = Intent(this, profil::class.java)
+                    startActivity(intentProfil)
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
 
     private fun validasiUbahAlamat(context: Context, alamat: String){
