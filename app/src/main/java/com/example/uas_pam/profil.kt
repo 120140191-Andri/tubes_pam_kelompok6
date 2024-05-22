@@ -42,7 +42,7 @@ class profil : AppCompatActivity() {
                         val data = document.data
                         // Lakukan apa pun yang perlu Anda lakukan dengan data di sini
 
-                        binding.nama.text = "Selamat Datang ${document.getString("nama")}"
+                        binding.nama.text = "Nama: ${document.getString("nama")}"
 
                     } else {
                         // Dokumen tidak ditemukan
@@ -69,6 +69,10 @@ class profil : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+
+        binding.logoutBtn.setOnClickListener {
+            logout()
         }
 
     }
