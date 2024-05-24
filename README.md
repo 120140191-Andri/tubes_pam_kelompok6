@@ -1,5 +1,9 @@
 # Tugas Besar Kelompok 6
 
+## Link Update Video Aplikasi
+https://drive.google.com/drive/folders/1Ty8djHU9YJ0TKhoh3274gJW4mSoYfyDz?usp=sharing
+untuk apk juga ada di link tersebut, tapi gk tau kenapa gk bisa di download
+
 ## Latar Belakang
 
 Proyek ini bertujuan untuk mengembangkan aplikasi mobile "Cek Asset Dapps Blockchain Cardano" yang memungkinkan pengguna untuk memantau, mengelola, dan melakukan transaksi aset digital mereka di jaringan Cardano dengan mudah dan aman. Aplikasi ini akan menjadi alat yang sangat berguna bagi pengguna yang ingin mengelola aset digital mereka dengan efisien tanpa harus mengandalkan solusi berbasis desktop atau web.
